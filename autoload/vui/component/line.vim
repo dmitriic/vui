@@ -19,18 +19,18 @@ function! vui#component#line#new(direction, x, y, size)
         let g:vui_box_vertical_line_char = '│'
     endif
 
-    function! obj.render(screen)
+    function! obj.render(render_buffer)
         let l:start  = self.is_horizontal() ? self.get_global_x() : self.get_global_y()
         let l:end    = l:start + (self.is_horizontal() ? self.get_width() : self.get_height())
 
         if (self.is_horizontal())
             for l:x in range(l:start, l:end)
-                call a:screen.put(l:x, self.get_global_y(), g:vui_box_horizontal_line_char)
+                call a:render_buffer.put(l:x, self.get_global_y(), g:vui_box_horizontal_line_char)
             endfor
         else
             if (self.is_vertical())
                 for l:y in range(l:start, l:end)
-                    call a:screen.put(self.get_global_x(), l:y, g:vui_box_vertical_line_char)
+                    call a:render_buffer.put(self.get_global_x(), l:y, g:vui_box_vertical_line_char)
                 endfor
             endif
         endif

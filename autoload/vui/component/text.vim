@@ -9,11 +9,11 @@ function! vui#component#text#new(content)
     unlet obj.set_width
     unlet obj.set_height
 
-    function! obj.render(screen)
+    function! obj.render(render_buffer)
         let l:x = self.get_global_x()
         let l:y = self.get_global_y()
         for l:i in range(0, len(self._lines) - 1)
-            call a:screen.put(l:x, l:y + l:i, self._lines[l:i])
+            call a:render_buffer.put(l:x, l:y + l:i, self._lines[l:i])
         endfor
     endfunction
 

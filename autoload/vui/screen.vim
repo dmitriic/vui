@@ -2,14 +2,13 @@ function! vui#screen#new()
     " extends node
     let obj                 = vui#node#new()
     let obj._buffer         = -1
-    let obj._lines          = []
-    let obj._modified_lines = []
-    let obj._root_component      = {}
+    let obj._render_buffer  = vui#render_buffer#new(obj)
+    let obj._root_component = {}
     let obj._type           = "screen"
 
     "disable manual sizing of screen (using window size)
-    call remove(obj, 'set_width')
-    call remove(obj, 'set_height')
+    unlet obj.set_width
+    unlet obj.set_height
 
     function! obj.set_root_component(component)
         let self._root_component = a:component
@@ -17,6 +16,14 @@ function! vui#screen#new()
 
     function! obj.get_root_component()
         return self._root_component
+    endfunction
+
+    function! obj.has_root_component()
+        return has_key(self._root_component, '_is_component') && self._root_component._is_component == 1
+    endfunction
+
+    function! obj.get_render_buffer()
+        return self._render_buffer
     endfunction
 
     function! obj.get_cursor_position()
@@ -61,73 +68,37 @@ function! vui#screen#new()
     endfunction
 
     function! obj.put(x, y, string)
-        let l:line = a:y
-        let l:col  = a:x
-
-        call self.ensure_col_exists(l:line, l:col)
-        let self._lines[l:line] = vui#util#replace_string(self._lines[l:line], a:string, l:col)
-        call self.mark_line_as_modified(l:line)
+        self._render_buffer.put(a:x, a:y, a:string)
     endfunction
 
     function! obj.render()
-        if !has_key(self._root_component, '_is_component') || !self._root_component._is_component || !self.is_focused()
+        if !self.has_root_component()
+            call self.clear()
             return
         endif
 
         let l:current_cursor_pos = getcurpos()
-        call self.clear()
 
-        call self._root_component.render(self)
-
-        let l:size  = len(self._modified_lines)
-        if l:size == 0
-            return
-        endif
-        let l:index = 0
+        call self._render_buffer.set_root_component(self._root_component)
+        call self._render_buffer.render()
 
         setlocal modifiable
 
-        while l:index < l:size
-            let l:line_number = self._modified_lines[l:index]
-            call setline(l:line_number + 1, self._lines[l:index])
-            let l:index += 1
-        endwhile
+        let l:lines_size     = line('$')
+        let l:new_lines      = self._render_buffer.get_lines()
+        let l:new_lines_size = len(l:new_lines)
+
+        for l:index in range(0, l:new_lines_size - 1)
+            let l:current_line = l:index >= l:lines_size ? "" : getline(l:index + 1)
+            let l:new_line     = l:new_lines[l:index]
+            if l:new_line !=# l:current_line
+                call setline(l:index + 1, l:new_line)
+            endif
+        endfor
+
         setlocal nomodifiable
+
         call setpos('.', l:current_cursor_pos)
-    endfunction
-
-    function! obj.mark_line_as_modified(line)
-        if index(self._modified_lines, a:line) >= 0
-            return
-        endif
-
-        call add(self._modified_lines, a:line)
-    endfunction
-
-    function! obj.ensure_line_exists(line)
-        if a:line < 0
-            return
-        endif
-
-        let l:lines_qtty = len(self._lines)
-        if l:lines_qtty > a:line
-            return
-        endif
-
-        while l:lines_qtty <= a:line
-            call add(self._lines,  "")
-            call self.mark_line_as_modified(l:lines_qtty)
-            let l:lines_qtty += 1
-        endwhile
-    endfunction
-
-    function! obj.ensure_col_exists(line, col)
-        call self.ensure_line_exists(a:line)
-        let l:line_size    = len(self._lines[a:line])
-        if l:line_size >= a:col
-            return
-        endif
-        let self._lines[a:line] .= repeat(' ', a:col - l:line_size)
     endfunction
 
     function! obj.show()
@@ -142,9 +113,7 @@ function! vui#screen#new()
         endif
 
         execute "silent normal! ggdG"
-
-        let self._lines          = []
-        let self._modified_lines = []
+        self._render_buffer.clear()
     endfunction
 
     function! obj.focus()

@@ -37,7 +37,7 @@ function! vui#component#box#new(x, y, width, height)
         " let g:vui_box_vertical_line_char = '|'
     endif
 
-    function! obj.render(screen)
+    function! obj.render(render_buffer)
         let l:x_start = self.get_global_x()
         let l:x_end   = l:x_start + self.get_width()
         let l:y_start = self.get_global_y()
@@ -54,15 +54,15 @@ function! vui#component#box#new(x, y, width, height)
         let l:top    .= g:vui_box_top_right_char
         let l:bottom .= g:vui_box_bottom_right_char
 
-        call a:screen.put(l:x_start, l:y_start, l:top)
-        call a:screen.put(l:x_start, l:y_end, l:bottom)
+        call a:render_buffer.put(l:x_start, l:y_start, l:top)
+        call a:render_buffer.put(l:x_start, l:y_end, l:bottom)
 
         for l:y in range(l:y_start + 1, l:y_end - 1)
-            call a:screen.put(l:x_start, l:y, g:vui_box_vertical_line_char)
-            call a:screen.put(l:x_end, l:y, g:vui_box_vertical_line_char)
+            call a:render_buffer.put(l:x_start, l:y, g:vui_box_vertical_line_char)
+            call a:render_buffer.put(l:x_end, l:y, g:vui_box_vertical_line_char)
         endfor
 
-        call self.render_children(a:screen)
+        call self.render_children(a:render_buffer)
     endfunction
 
     return obj

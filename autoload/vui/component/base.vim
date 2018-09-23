@@ -11,11 +11,11 @@ function! vui#component#base#new()
     let obj._is_component = 1
     let obj._type         = "base_component"
 
-    function! obj.render(screen)
+    function! obj.render(render_buffer)
         echoerr "Render not implemented for this component"
     endfunction
 
-    function! obj.render_children(screen)
+    function! obj.render_children(render_buffer)
         let l:children_count = len(self._children)
 
         if l:children_count == 0
@@ -24,7 +24,7 @@ function! vui#component#base#new()
 
         for l:i in range(0, l:children_count - 1)
             if self._children[l:i].should_render() == 1
-                call self._children[l:i].render(a:screen)
+                call self._children[l:i].render(a:render_buffer)
             endif
         endfor
     endfunction

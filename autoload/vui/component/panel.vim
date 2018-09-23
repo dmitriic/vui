@@ -44,7 +44,7 @@ function! vui#component#panel#new(title, width, height)
         return self._content_component
     endfunction
 
-    function! obj.render(screen)
+    function! obj.render(render_buffer)
         let l:text_pos = 1 + (self.get_width() - self._title.get_width()) / 2
         call self._title.set_x(l:text_pos)
         call self._title.set_y(1)
@@ -56,20 +56,20 @@ function! vui#component#panel#new(title, width, height)
 
         call self._box.set_width(self.get_width())
         call self._box.set_height(self.get_height())
-        call self._box.render(a:screen)
+        call self._box.render(a:render_buffer)
 
         call self._divider.set_size(self.get_width() - 2)
 
         " call self._divider._width  = self.get_width() - 2
         " call self._divider._height = self.get_height() - 2
 
-        call self._divider.render(a:screen)
+        call self._divider.render(a:render_buffer)
 
-        call self._title.render(a:screen)
-        call self._content_component.render(a:screen)
+        call self._title.render(a:render_buffer)
+        call self._content_component.render(a:render_buffer)
 
-        call a:screen.put(self.get_global_x(), self.get_global_y() + 2, g:vui_box_t_left)
-        call a:screen.put(self.get_global_x() + self.get_width(), self.get_global_y() + 2, g:vui_box_t_right)
+        call a:render_buffer.put(self.get_global_x(), self.get_global_y() + 2, g:vui_box_t_left)
+        call a:render_buffer.put(self.get_global_x() + self.get_width(), self.get_global_y() + 2, g:vui_box_t_right)
 
     endfunction
 
