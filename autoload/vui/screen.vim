@@ -96,6 +96,10 @@ function! vui#screen#new()
             endif
         endfor
 
+        if (l:new_lines_size < l:lines_size)
+            execute (l:new_lines_size + 1) . ',$d'
+        endif
+
         setlocal nomodifiable
 
         call setpos('.', l:current_cursor_pos)
