@@ -37,16 +37,23 @@ function! vui#node#new()
 
     function! obj.off(event, ...)
         if a:0 == 1
-            if has_key(self._events, a:event)
-                let self._events[a:event] = []
+            if !has_key(self._events, a:event)
+                return
             endif
+
+            let l:index = -1
+            for l:i in range(0, len(self._events[a:event]))
+                if self._events[a:event][l:i] == a:1
+                    let l:index = l:i
+                    break
+                endif
+            endfor
+            if l:index >= 0
+                call remove(self._events[a:event], l:index)
+            endif
+
         else
-            let l:i = 0
-            while l:i < a:0
-                let l:callback = 'a:' . l:i
-                call remove(self._events[a:event], {l:callback})
-                let l:i += 1
-            endwhile
+            call remove(self._events, a:event)
         endif
     endfunction
 
@@ -56,8 +63,12 @@ function! vui#node#new()
         endif
         let l:i = 0
         while l:i < len(self._events[a:event])
-            let Callback = function(self._events[a:event][i])
-            call Callback(a:payload)
+            let Callback = function(self._events[a:event][i], self)
+            let l:result = Callback(a:payload)
+
+            if l:result
+                break
+            endif
 
             let l:i += 1
         endwhile
