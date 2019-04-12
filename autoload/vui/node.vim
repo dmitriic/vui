@@ -52,7 +52,7 @@ function! vui#node#new()
             let Callback = function(self._events[a:event][i], self)
             let l:result = Callback(a:payload)
 
-            if l:result
+            if l:result ==# 1
                 let l:propagate = 0
                 break
             endif

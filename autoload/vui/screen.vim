@@ -1,3 +1,11 @@
+function! s:rerender(screen, component)
+    if a:screen._is_rendering
+        return
+    endif
+    call a:screen.render()
+endfunction
+
+
 function! vui#screen#new()
     " extends node
     let obj                 = vui#node#new()
@@ -7,9 +15,11 @@ function! vui#screen#new()
     let obj._type           = "screen"
     let obj._width          = 0
     let obj._height         = 0
+    let obj._is_rendering   = 0
 
     function! obj.set_root_component(component)
         let self._root_component = a:component
+        call a:component.on('changed', function('s:rerender', [self]))
     endfunction
 
     function! obj.get_root_component()
@@ -82,14 +92,22 @@ function! vui#screen#new()
     endfunction
 
     function! obj.render()
-        if !self.has_root_component()
+        if self._is_rendering
+            return
+        endif
+
+        if !self.has_root_component() || !self.get_root_component().is_visible()
             call self.clear()
+            let self._is_rendering = 0
             return
         endif
 
         if !self.is_focused()
             call self.focus()
         endif
+
+        let self._is_rendering = 1
+
 
         let l:current_cursor_pos = getcurpos()
 
@@ -120,6 +138,7 @@ function! vui#screen#new()
         setlocal nomodifiable
 
         call setpos('.', l:current_cursor_pos)
+        let self._is_rendering = 0
     endfunction
 
     function! obj.show()
