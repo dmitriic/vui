@@ -102,7 +102,9 @@ function! vui#screen#new()
         for l:index in range(0, l:new_lines_size - 1)
             let l:current_line = l:index >= l:lines_size ? "" : getline(l:index + 1)
             let l:new_line     = l:new_lines[l:index]
-            if l:new_line !=# l:current_line
+            if l:new_line == ""
+                call append(l:index, '')
+            elseif l:new_line !=# l:current_line
                 call setline(l:index + 1, l:new_line)
             endif
         endfor
@@ -147,6 +149,7 @@ function! vui#screen#new()
             setlocal norelativenumber
             setlocal signcolumn=no
             setlocal cc=0
+            " setlocal listchars=
             "temporary
             "execute "silent IndentLinesDisable"
             "autocmd  TO-DO listen for resize of window

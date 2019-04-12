@@ -11,11 +11,12 @@ function! vui#component#vcontainer#new()
 
         let l:y     = 0
         let l:width = 0
+
         for l:i in range(0, self._num_children - 1)
             if self._children[l:i].should_render() == 1
                 call self._children[l:i].set_y(l:y)
-                let l:y = l:y + self._children[l:i].get_height() + 1
-                let l:width = max([l:width, self._children[l:i].get_width()])
+                let l:y     = l:y + self._children[l:i].get_height() + 1
+                let l:width = max([l:width, self._children[l:i].get_x() + self._children[l:i].get_width()])
             endif
         endfor
 
@@ -30,7 +31,6 @@ function! vui#component#vcontainer#new()
 
         return 1
     endfunction
-
 
     return obj
 endfunction

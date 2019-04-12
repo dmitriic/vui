@@ -8,12 +8,12 @@ function! vui#component#panel#new(title, width, height)
 
     let obj._box               = vui#component#box#new(0, 0, a:width, a:height)
     let obj._divider           = vui#component#hline#new(1, 2, a:width - 2)
-    let obj._title             = vui#component#text#new(a:title)
+    let obj._title_component   = vui#component#text#new(a:title)
     let obj._content_component = vui#component#base#new()
 
     call obj.add_child(obj._box)
     call obj.add_child(obj._divider)
-    call obj.add_child(obj._title)
+    call obj.add_child(obj._title_component)
     call obj.add_child(obj._content_component)
 
     call vui#util#set_default_value('g:vui_box_t_right', '┤')
@@ -33,21 +33,27 @@ function! vui#component#panel#new(title, width, height)
 
     function! obj.set_title(title)
         let self._title = a:title
+        self._title_component.clear()
+        self._title_component.add_line(a:title)
     endfunction
 
     function! obj.get_content_component()
         return self._content_component
     endfunction
 
+    function! obj.get_title_component()
+        return self._title_component
+    endfunction
+
     function! obj.render(render_buffer)
-        let l:text_pos = 1 + (self.get_width() - self._title.get_width()) / 2
+        let l:text_pos = 1 + (self.get_width() - self._title_component.get_width()) / 2
 
         if l:text_pos <= 0
             let l:text_pos = 1
         endif
 
-        call self._title.set_x(l:text_pos)
-        call self._title.set_y(1)
+        call self._title_component.set_x(l:text_pos)
+        call self._title_component.set_y(1)
         call self._divider.set_y(2)
 
 
@@ -65,7 +71,7 @@ function! vui#component#panel#new(title, width, height)
 
         call self._divider.render(a:render_buffer)
 
-        call self._title.render(a:render_buffer)
+        call self._title_component.render(a:render_buffer)
         call self._content_component.render(a:render_buffer)
 
         call a:render_buffer.put(self.get_global_x(), self.get_global_y() + 2, g:vui_box_t_left)

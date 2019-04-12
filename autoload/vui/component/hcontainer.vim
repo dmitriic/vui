@@ -16,9 +16,10 @@ function! vui#component#hcontainer#new()
             if self._children[l:i].should_render() == 1
                 call self._children[l:i].set_x(l:x)
                 let l:x      = l:x + self._children[l:i].get_width() + 1
-                let l:height = max([l:height, self._children[l:i].get_height()])
+                let l:height = max([l:height, self._children[l:i].get_y() + self._children[l:i].get_height()])
             endif
         endfor
+
         call self.set_width(l:x - 1)
         call self.set_height(l:height)
     endfunction
