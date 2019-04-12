@@ -11,13 +11,8 @@ function! vui#component#line#new(direction, x, y, size)
     let obj.Parent_get_width = obj.get_height
     let obj.Parent_get_width = obj.get_width
 
-    if !exists('g:vui_horizontal_line_char')
-        let g:vui_box_horizontal_line_char = '─'
-    endif
-
-    if !exists('g:vui_vertical_line_char')
-        let g:vui_box_vertical_line_char = '│'
-    endif
+    call vui#util#set_default_value('g:vui_horizontal_line_char', '─')
+    call vui#util#set_default_value('g:vui_vertical_line_char', '│')
 
     function! obj.render(render_buffer)
         let l:start  = self.is_horizontal() ? self.get_global_x() : self.get_global_y()

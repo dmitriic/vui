@@ -16,13 +16,8 @@ function! vui#component#panel#new(title, width, height)
     call obj.add_child(obj._title)
     call obj.add_child(obj._content_component)
 
-    if !exists('g:vui_box_t_right')
-        let g:vui_box_t_right = '┤'
-    endif
-
-    if !exists('g:vui_box_t_left')
-        let g:vui_box_t_left = '├'
-    endif
+    call vui#util#set_default_value('g:vui_box_t_right', '┤')
+    call vui#util#set_default_value('g:vui_box_t_left', '├')
 
     " if !exists('g:vui_box_t_top')
     "     let g:vui_box_t_top = '┬'

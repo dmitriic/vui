@@ -7,35 +7,13 @@ function! vui#component#box#new(x, y, width, height)
     call obj.set_width(a:width)
     call obj.set_height(a:height)
 
-    if !exists('g:vui_box_top_left_char')
-        " let g:vui_box_top_left_char = '+'
-        let g:vui_box_top_left_char = '┌'
-    endif
-
-    if !exists('g:vui_box_top_right_char')
-        " let g:vui_box_top_right_char = '+'
-        let g:vui_box_top_right_char = '┐'
-    endif
-
-    if !exists('g:vui_box_bottom_left_char')
-        " let g:vui_box_bottom_left_char = '+'
-        let g:vui_box_bottom_left_char = '└'
-    endif
-
-    if !exists('g:vui_box_bottom_right_char')
-        " let g:vui_box_bottom_right_char = '+'
-        let g:vui_box_bottom_right_char = '┘'
-    endif
-
-    if !exists('g:vui_horizontal_line_char')
-        " let g:vui_box_horizontal_line_char = '-'
-        let g:vui_box_horizontal_line_char = '─'
-    endif
-
-    if !exists('g:vui_vertical_line_char')
-        let g:vui_box_vertical_line_char = '│'
-        " let g:vui_box_vertical_line_char = '|'
-    endif
+    call vui#util#set_default_value('g:vui_box_top_left_char', '┌')
+    call vui#util#set_default_value('g:vui_box_top_left_char', '┌')
+    call vui#util#set_default_value('g:vui_box_top_right_char', '┐')
+    call vui#util#set_default_value('g:vui_box_bottom_left_char', '└')
+    call vui#util#set_default_value('g:vui_box_bottom_right_char', '┘')
+    call vui#util#set_default_value('g:vui_horizontal_line_char', '─')
+    call vui#util#set_default_value('g:vui_vertical_line_char', '|')
 
     function! obj.render(render_buffer)
         let l:x_start = self.get_global_x()
