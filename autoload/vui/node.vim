@@ -41,17 +41,25 @@ function! vui#node#new()
         if !has_key(self._events, a:event)
             return
         endif
-        let l:i = 0
+
+        let l:i         = 0
+        let l:propagate = 1
+
         while l:i < len(self._events[a:event])
             let Callback = function(self._events[a:event][i], self)
             let l:result = Callback(a:payload)
 
             if l:result
+                l:propagate = 0
                 break
             endif
 
             let l:i += 1
         endwhile
+
+        if l:propagate && self.has_parent()
+            self._parent.emit(a:event, a:payload)
+        endif
     endfunction
 
     function! obj.add_child(node)
