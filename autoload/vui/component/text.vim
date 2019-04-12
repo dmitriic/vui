@@ -17,8 +17,16 @@ function! vui#component#text#new(content)
         endfor
     endfunction
 
-    function! obj.get_content()
-        return self._content
+    " function! obj.get_content()
+    "     return self._content
+    " endfunction
+    " function! obj.set_content(content)
+    "     let self._content = a:content
+    " endfunction
+
+    function! obj.clear()
+        self._lines = []
+        self._width = 0;
     endfunction
 
     function! obj.get_height()
@@ -61,10 +69,6 @@ function! vui#component#text#new(content)
         endfor
 
         let self._width = l:width
-    endfunction
-
-    function! obj.set_content(content)
-        let self._content = a:content
     endfunction
 
     return obj

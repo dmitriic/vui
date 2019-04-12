@@ -12,21 +12,19 @@ function! vui#component#base#new()
     let obj._type         = "base_component"
 
     function! obj.render(render_buffer)
-        self.render_children(a:render_buffer)
+        call self.render_children(a:render_buffer)
     endfunction
 
     function! obj.update(screen)
-        self.update_children(a:screen)
+        call self.update_children(a:screen)
     endfunction
 
     function! obj.render_children(render_buffer)
-        let l:children_count = len(self._children)
-
-        if l:children_count == 0
+        if !self.has_children()
             return
         endif
 
-        for l:i in range(0, l:children_count - 1)
+        for l:i in range(0, self._num_children - 1)
             if self._children[l:i].should_render() == 1
                 call self._children[l:i].render(a:render_buffer)
             endif
@@ -34,13 +32,11 @@ function! vui#component#base#new()
     endfunction
 
     function! obj.update_children(screen)
-        let l:children_count = len(self._children)
-
-        if l:children_count == 0
+        if !self.has_children()
             return
         endif
 
-        for l:i in range(0, l:children_count - 1)
+        for l:i in range(0, self._num_children - 1)
             call self._children[l:i].update(a:screen)
         endfor
     endfunction

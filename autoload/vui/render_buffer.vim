@@ -8,8 +8,8 @@ function! vui#render_buffer#new(screen)
     let obj._type           = "render_buffer"
 
     "disable manual sizing of screen (using window size)
-    unlet obj.set_width
-    unlet obj.set_height
+    " unlet obj.set_width
+    " unlet obj.set_height
 
     function! obj.set_root_component(component)
         let self._root_component = a:component

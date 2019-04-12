@@ -64,7 +64,7 @@ function! vui#screen#new()
         let self._height = l:new_height
 
         if l:emit
-            self.emit('size_changed', self)
+            call self.emit('size_changed', self)
         endif
     endfunction
 
