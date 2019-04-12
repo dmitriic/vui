@@ -76,7 +76,7 @@ function! vui#render_buffer#new(screen)
 
     function! obj.ensure_col_exists(line, col)
         call self.ensure_line_exists(a:line)
-        let l:line_size    = len(self._lines[a:line])
+        let l:line_size = len(self._lines[a:line])
         if l:line_size >= a:col
             return
         endif

@@ -8,18 +8,15 @@ function! vui#component#base#new()
     let obj._height       = 0
     let obj._visible      = 1
     let obj._focusable    = 0
-    let obj._parent       = {}
     let obj._is_component = 1
     let obj._type         = "base_component"
 
     function! obj.render(render_buffer)
-        " Modifications to buffer must be made inside of here
-        " echoerr "Render not implemented for this component"
+        self.render_children(a:render_buffer)
     endfunction
 
-    function! obj.update()
-        " This method is called before render
-        " Don't udpate the buffer inside of here
+    function! obj.update(screen)
+        self.update_children(a:screen)
     endfunction
 
     function! obj.render_children(render_buffer)
@@ -33,6 +30,18 @@ function! vui#component#base#new()
             if self._children[l:i].should_render() == 1
                 call self._children[l:i].render(a:render_buffer)
             endif
+        endfor
+    endfunction
+
+    function! obj.update_children(screen)
+        let l:children_count = len(self._children)
+
+        if l:children_count == 0
+            return
+        endif
+
+        for l:i in range(0, l:children_count - 1)
+            call self._children[l:i].update(a:screen)
         endfor
     endfunction
 

@@ -4,8 +4,8 @@ function! vui#node#new()
     let obj._events   = {}
     let obj._type     = 'node'
     let obj._is_node  = 1
-    let obj._children     = []
-
+    let obj._children = []
+    let obj._parent   = {}
 
     function! obj.on(event, callback)
         if !has_key(self._events, a:event)
@@ -54,7 +54,7 @@ function! vui#node#new()
     endfunction
 
     function! obj.add_child(node)
-        if !has_key(a:node, "_is_component") || !a:node._is_component
+        if !has_key(a:node, "_is_node") || !a:node._is_node
             return
         endif
         call a:node.set_parent(self)
@@ -62,7 +62,7 @@ function! vui#node#new()
     endfunction
 
     function! obj.has_parent()
-        if !has_key(self._parent, "_is_component") || !self._parent._is_component
+        if !has_key(self._parent, "_is_node") || !self._parent._is_node
             return 0
         endif
         return 1
@@ -77,7 +77,7 @@ function! vui#node#new()
     endfunction
 
     function! obj.remove_child(node)
-        if !has_key(a:node, "_is_component") || !a:node._is_component
+        if !has_key(a:node, "_is_node") || !a:node._is_node
             return
         endif
         " TODO
