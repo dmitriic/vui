@@ -44,3 +44,10 @@ function! vui#util#replace_string(original_string, string_to_replace, position)
 
     " return l:string_before . l:string_to_replace . l:string_after
 endfunction
+
+function! vui#util#set_default_value(variable_name, default_value)
+    if !exists(a:variable_name)
+        " TODO: make it more robust
+        execute "let " . a:variable_name . '="' . escape(a:default_value, '"') . '"'
+    endif
+endfunction
