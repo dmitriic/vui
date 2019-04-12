@@ -1,5 +1,5 @@
 function! vui#component#panel#new(title, width, height)
-    let obj        = vui#component#container#new()
+    let obj        = vui#component#base#new()
     let obj._type  = "panel"
     let obj._title = a:title
 
@@ -9,7 +9,7 @@ function! vui#component#panel#new(title, width, height)
     let obj._box               = vui#component#box#new(0, 0, a:width, a:height)
     let obj._divider           = vui#component#hline#new(1, 2, a:width - 2)
     let obj._title             = vui#component#text#new(a:title)
-    let obj._content_component = vui#component#container#new()
+    let obj._content_component = vui#component#base#new()
 
     call obj.add_child(obj._box)
     call obj.add_child(obj._divider)
@@ -41,6 +41,11 @@ function! vui#component#panel#new(title, width, height)
 
     function! obj.render(render_buffer)
         let l:text_pos = 1 + (self.get_width() - self._title.get_width()) / 2
+
+        if l:text_pos <= 0
+            let l:text_pos = 1
+        endif
+
         call self._title.set_x(l:text_pos)
         call self._title.set_y(1)
         call self._divider.set_y(2)
