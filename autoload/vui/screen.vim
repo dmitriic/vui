@@ -5,10 +5,8 @@ function! vui#screen#new()
     let obj._render_buffer  = vui#render_buffer#new(obj)
     let obj._root_component = {}
     let obj._type           = "screen"
-
-    "disable manual sizing of screen (using window size)
-    unlet obj.set_width
-    unlet obj.set_height
+    let obj._width          = 0
+    let obj._height         = 0
 
     function! obj.set_root_component(component)
         let self._root_component = a:component
@@ -54,8 +52,20 @@ function! vui#screen#new()
         if !self.is_focused()
             return
         endif
-        let self._width  = winwidth(0)
-        let self._height = winheight(0)
+        let l:new_width  = winwidth(0)
+        let l:new_height = winheight(0)
+
+        let l:emit = 0
+        if l:new_width != self._width || l:new_height != self._height
+            let l:emit = 1
+        endif
+
+        let self._width  = l:new_width
+        let self._height = l:new_height
+
+        if l:emit
+            self.emit('size_changed', self)
+        endif
     endfunction
 
     function! obj.is_focused()
@@ -80,6 +90,7 @@ function! vui#screen#new()
         let l:current_cursor_pos = getcurpos()
 
         call self._render_buffer.set_root_component(self._root_component)
+        call self._root_component.update(self)
         call self._render_buffer.render()
 
         setlocal modifiable
@@ -117,7 +128,7 @@ function! vui#screen#new()
         endif
 
         execute "silent normal! ggdG"
-        self._render_buffer.clear()
+        call self._render_buffer.clear()
     endfunction
 
     function! obj.focus()
@@ -137,11 +148,19 @@ function! vui#screen#new()
             setlocal signcolumn=no
             setlocal cc=0
             "temporary
-            execute "silent IndentLinesDisable"
+            "execute "silent IndentLinesDisable"
             "autocmd  TO-DO listen for resize of window
         else
             execute "silent buffer " . self._buffer
         endif
+    endfunction
+
+    function! obj.get_width()
+        return self._width
+    endfunction
+
+    function! obj.get_height()
+        return self._height
     endfunction
 
     return obj
