@@ -51,3 +51,8 @@ function! vui#util#set_default_value(variable_name, default_value)
         execute "let " . a:variable_name . '="' . escape(a:default_value, '"') . '"'
     endif
 endfunction
+
+function! vui#util#is_equal(variable, other)
+    return a:variable ==# a:other ? 1 : 0
+endfunction
+

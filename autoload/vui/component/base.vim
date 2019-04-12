@@ -46,7 +46,9 @@ function! vui#component#base#new()
     endfunction
 
     function! obj.set_x(x)
+        let l:changed = !vui#util#is_equal(a:x, self._x)
         let self._x = a:x
+        call self.emit_if(l:changed, 'changed', self)
     endfunction
 
     function! obj.get_global_x()
@@ -70,7 +72,9 @@ function! vui#component#base#new()
     endfunction
 
     function! obj.set_y(y)
+        let l:changed = !vui#util#is_equal(a:y, self._y)
         let self._y = a:y
+        call self.emit_if(l:changed, 'changed', self)
     endfunction
 
     function! obj.get_bounding_box()
@@ -83,7 +87,9 @@ function! vui#component#base#new()
     endfunction
 
     function! obj.set_z(z)
+        let l:changed = !vui#util#is_equal(a:z, self._z)
         let self._z = a:z
+        call self.emit_if(l:changed, 'changed', self)
     endfunction
 
     function! obj.get_visible()
@@ -91,7 +97,9 @@ function! vui#component#base#new()
     endfunction
 
     function! obj.set_visible(visible)
+        let l:changed = !vui#util#is_equal(a:visible, self._visible)
         let self._visible = a:visible
+        call self.emit_if(l:changed, 'changed', self)
     endfunction
 
     function! obj.is_visible()
@@ -103,7 +111,9 @@ function! vui#component#base#new()
     endfunction
 
     function! obj.set_focusable(focusable)
+        let l:changed = !vui#util#is_equal(a:focusable, self._focusable)
         let self._focusable = a:focusable
+        call self.emit_if(l:changed, 'changed', self)
     endfunction
 
     function! obj.should_render()
@@ -119,7 +129,9 @@ function! vui#component#base#new()
     endfunction
 
     function! obj.set_width(width)
+        let l:changed = !vui#util#is_equal(a:width, self._width)
         let self._width = a:width
+        call self.emit_if(l:changed, 'changed', self)
     endfunction
 
     function! obj.get_height()
@@ -127,7 +139,9 @@ function! vui#component#base#new()
     endfunction
 
     function! obj.set_height(height)
+        let l:changed = !vui#util#is_equal(a:height, self._height)
         let self._height = a:height
+        call self.emit_if(l:changed, 'changed', self)
     endfunction
 
     function! obj.get_size()

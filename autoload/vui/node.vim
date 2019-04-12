@@ -39,6 +39,9 @@ function! vui#node#new()
 
     function! obj.emit(event, payload)
         if !has_key(self._events, a:event)
+            if self.has_parent()
+                call self._parent.emit(a:event, a:payload)
+            endif
             return
         endif
 
@@ -50,7 +53,7 @@ function! vui#node#new()
             let l:result = Callback(a:payload)
 
             if l:result
-                l:propagate = 0
+                let l:propagate = 0
                 break
             endif
 
@@ -62,6 +65,12 @@ function! vui#node#new()
         endif
     endfunction
 
+    function! obj.emit_if(condition, event, payload)
+        if a:condition
+            call self.emit(a:event, a:payload)
+        endif
+    endfunction
+
     function! obj.add_child(node)
         if !has_key(a:node, "_is_node") || !a:node._is_node
             return
@@ -69,6 +78,7 @@ function! vui#node#new()
         call a:node.set_parent(self)
         call add(self._children, a:node)
         let self._num_children = self._num_children + 1
+        call self.emit('changed', self)
     endfunction
 
     function! obj.has_parent()
@@ -100,6 +110,7 @@ function! vui#node#new()
         endif
         " TODO
         "let self._num_children = self._num_children - 1
+        "self.emit('changed', self)
     endfunction
 
     return obj

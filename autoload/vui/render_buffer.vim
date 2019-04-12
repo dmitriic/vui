@@ -47,6 +47,10 @@ function! vui#render_buffer#new(screen)
         endif
 
         call self._root_component.render(self)
+
+        if len(self._modified_lines) > 0
+            call self.emit('changed', self)
+        endif
     endfunction
 
     function! obj.mark_line_as_modified(line)

@@ -87,6 +87,10 @@ function! vui#screen#new()
             return
         endif
 
+        if !self.is_focused()
+            call self.focus()
+        endif
+
         let l:current_cursor_pos = getcurpos()
 
         call self._render_buffer.set_root_component(self._root_component)
@@ -129,8 +133,10 @@ function! vui#screen#new()
             return
         endif
 
+        setlocal modifiable
         execute "silent normal! ggdG"
         call self._render_buffer.clear()
+        setlocal nomodifiable
     endfunction
 
     function! obj.focus()
@@ -149,10 +155,17 @@ function! vui#screen#new()
             setlocal norelativenumber
             setlocal signcolumn=no
             setlocal cc=0
-            " setlocal listchars=
+            setlocal filetype=vui
+            setlocal listchars=
+
+            let b:screen = self
             "temporary
             "execute "silent IndentLinesDisable"
             "autocmd  TO-DO listen for resize of window
+            "augroup vui_external_events
+            "    autocmd! * <buffer>
+            "    autocmd Name <bufffer> command
+            "augroup END
         else
             execute "silent buffer " . self._buffer
         endif

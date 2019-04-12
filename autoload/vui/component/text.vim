@@ -39,11 +39,14 @@ function! vui#component#text#new(content)
         if l:width > self.get_width()
             let self._width = l:width
         endif
+        call self.emit('changed', self)
     endfunction
 
     function! obj.remove_line(index)
         let l:line remove(self._lines, a:index)
         call self.update_width()
+
+        call self.emit('changed', self)
 
         return l:line
     endfunction
@@ -56,6 +59,8 @@ function! vui#component#text#new(content)
         let l:old_line           = self._lines[a:index]
         let self._lines[a:index] = a:new_content
 
+        call self.emit('changed', self)
+
         return l:old_line
     endfunction
 
@@ -67,6 +72,8 @@ function! vui#component#text#new(content)
                 let l:width = l:size
             endif
         endfor
+
+        call self.emit('changed', self)
 
         let self._width = l:width
     endfunction

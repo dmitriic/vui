@@ -8,8 +8,8 @@ function! vui#component#line#new(direction, x, y, size)
     call obj.set_x(a:x)
     call obj.set_y(a:y)
 
-    let obj.Parent_get_width = obj.get_height
-    let obj.Parent_get_width = obj.get_width
+    let obj._parent_get_height = obj.get_height
+    let obj._parent_get_width  = obj.get_width
 
     call vui#util#set_default_value('g:vui_horizontal_line_char', '─')
     call vui#util#set_default_value('g:vui_vertical_line_char', '│')
@@ -46,7 +46,7 @@ function! vui#component#line#new(direction, x, y, size)
 
     function! obj.get_height()
         if self.is_vertical()
-            return self.Parent_get_height()
+            return self._parent_get_height()
         endif
 
         return 1
@@ -54,7 +54,7 @@ function! vui#component#line#new(direction, x, y, size)
 
     function! obj.get_width()
         if self.is_horizontal()
-            return self.Parent_get_width()
+            return self._parent_get_width()
         endif
 
         return 1
