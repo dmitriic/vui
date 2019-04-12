@@ -1,32 +1,11 @@
 function! vui#node#new()
     let obj = {}
 
-    let obj._width    = 0
-    let obj._height   = 0
     let obj._events   = {}
     let obj._type     = 'node'
     let obj._is_node  = 1
+    let obj._children     = []
 
-    function! obj.get_width()
-        return self._width
-    endfunction
-
-    function! obj.set_width(width)
-        let self._width = a:width
-    endfunction
-
-    function! obj.get_height()
-        return self._height
-    endfunction
-
-    function! obj.set_height(height)
-        let self._height = a:height
-    endfunction
-
-    function! obj.get_size()
-        let l:size = { 'width': self._width, 'height': self._height }
-        return l:size
-    endfunction
 
     function! obj.on(event, callback)
         if !has_key(self._events, a:event)
@@ -72,6 +51,36 @@ function! vui#node#new()
 
             let l:i += 1
         endwhile
+    endfunction
+
+    function! obj.add_child(node)
+        if !has_key(a:node, "_is_component") || !a:node._is_component
+            return
+        endif
+        call a:node.set_parent(self)
+        call add(self._children, a:node)
+    endfunction
+
+    function! obj.has_parent()
+        if !has_key(self._parent, "_is_component") || !self._parent._is_component
+            return 0
+        endif
+        return 1
+    endfunction
+
+    function! obj.get_parent()
+        return self._parent
+    endfunction
+
+    function! obj.set_parent(parent)
+        let self._parent = a:parent
+    endfunction
+
+    function! obj.remove_child(node)
+        if !has_key(a:node, "_is_component") || !a:node._is_component
+            return
+        endif
+        " TODO
     endfunction
 
     return obj

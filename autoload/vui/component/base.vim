@@ -4,7 +4,8 @@ function! vui#component#base#new()
     let obj._x            = 0
     let obj._y            = 0
     let obj._z            = 0
-    let obj._children     = []
+    let obj._width        = 0
+    let obj._height       = 0
     let obj._visible      = 1
     let obj._focusable    = 0
     let obj._parent       = {}
@@ -12,7 +13,13 @@ function! vui#component#base#new()
     let obj._type         = "base_component"
 
     function! obj.render(render_buffer)
-        echoerr "Render not implemented for this component"
+        " Modifications to buffer must be made inside of here
+        " echoerr "Render not implemented for this component"
+    endfunction
+
+    function! obj.update()
+        " This method is called before render
+        " Don't udpate the buffer inside of here
     endfunction
 
     function! obj.render_children(render_buffer)
@@ -102,34 +109,25 @@ function! vui#component#base#new()
         return 1
     endfunction
 
-    function! obj.add_child(node)
-        if !has_key(a:node, "_is_component") || !a:node._is_component
-            return
-        endif
-        call a:node.set_parent(self)
-        call add(self._children, a:node)
+    function! obj.get_width()
+        return self._width
     endfunction
 
-    function! obj.has_parent()
-        if !has_key(self._parent, "_is_component") || !self._parent._is_component
-            return 0
-        endif
-        return 1
+    function! obj.set_width(width)
+        let self._width = a:width
     endfunction
 
-    function! obj.get_parent()
-        return self._parent
+    function! obj.get_height()
+        return self._height
     endfunction
 
-    function! obj.set_parent(parent)
-        let self._parent = a:parent
+    function! obj.set_height(height)
+        let self._height = a:height
     endfunction
 
-    function! obj.remove_child(node)
-        if !has_key(a:node, "_is_component") || !a:node._is_component
-            return
-        endif
-        " call add(self._children, node)
+    function! obj.get_size()
+        let l:size = { 'width': self._width, 'height': self._height }
+        return l:size
     endfunction
 
     return obj
