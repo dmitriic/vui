@@ -149,7 +149,7 @@ function! vui#screen#new()
         let self._is_rendering = 0
 
         if !self.refocus_element()
-            if len(self._focusables) > self._focus_index
+            if len(self._focusables) > self._focus_index && self._focus_index >= 0
                 call self.focus_element(self._focusables[self._focus_index])
             else
                 call self.focus_previous_element()
@@ -166,7 +166,7 @@ function! vui#screen#new()
         call self.focus()
         call self.update_size()
         call self.render()
-        call self.focus_next_element()
+        call self.focus_first_element()
         call self.emit('show', self)
     endfunction
 
