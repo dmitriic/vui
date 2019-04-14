@@ -17,11 +17,11 @@ function! vui#component#panel#new(title, width, height)
     call obj.add_child(obj._title_component)
     call obj.add_child(obj._content_component)
 
-    call vui#util#set_default_value('g:vui_box_t_right', '┤')
-    call vui#util#set_default_value('g:vui_box_t_left', '├')
+    " call vui#util#set_default_value('g:vui_box_t_right', '┤')
+    " call vui#util#set_default_value('g:vui_box_t_left', '├')
 
-    " call vui#util#set_default_value('g:vui_box_t_right', '+')
-    " call vui#util#set_default_value('g:vui_box_t_left', '+')
+    call vui#util#set_default_value('g:vui_box_t_right', '+')
+    call vui#util#set_default_value('g:vui_box_t_left', '+')
 
     " if !exists('g:vui_box_t_top')
     "     let g:vui_box_t_top = '┬'

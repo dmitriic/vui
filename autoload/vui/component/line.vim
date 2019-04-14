@@ -11,8 +11,11 @@ function! vui#component#line#new(direction, x, y, size)
     let obj._parent_get_height = obj.get_height
     let obj._parent_get_width  = obj.get_width
 
-    call vui#util#set_default_value('g:vui_horizontal_line_char', '─')
-    call vui#util#set_default_value('g:vui_vertical_line_char', '│')
+    " call vui#util#set_default_value('g:vui_horizontal_line_char', '─')
+    " call vui#util#set_default_value('g:vui_vertical_line_char', '│')
+
+    call vui#util#set_default_value('g:vui_horizontal_line_char', '-')
+    call vui#util#set_default_value('g:vui_vertical_line_char', '|')
 
     function! obj.render(render_buffer)
         let l:start  = self.is_horizontal() ? self.get_global_x() : self.get_global_y()
