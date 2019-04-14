@@ -34,11 +34,16 @@ function! vui#component#text#new(content)
     endfunction
 
     function! obj.add_line(content)
-        call add(self._lines, a:content)
-        let l:width = strwidth(a:content)
-        if l:width > self.get_width()
-            let self._width = l:width
-        endif
+        let l:lines = split(a:content, "\n")
+
+        for l:i in range(0, len(l:lines) - 1)
+            call add(self._lines, l:lines[l:i])
+            let l:width = strwidth(l:lines[l:i])
+            if l:width > self.get_width()
+                let self._width = l:width
+            endif
+        endfor
+
         call self.emit('changed', self)
     endfunction
 
