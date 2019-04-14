@@ -78,7 +78,7 @@ function! vui#component#panel#new(title, width, height)
         call self._content_component.render(a:render_buffer)
 
         call a:render_buffer.put(self.get_global_x(), self.get_global_y() + 2, g:vui_box_t_left)
-        call a:render_buffer.put(self.get_global_x() + self.get_width(), self.get_global_y() + 2, g:vui_box_t_right)
+        call a:render_buffer.put(self.get_global_x() + self.get_width() - 1, self.get_global_y() + 2, g:vui_box_t_right)
 
     endfunction
 
