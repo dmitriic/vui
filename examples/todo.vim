@@ -21,7 +21,6 @@ function! VuiToDo()
     endfunction
 
     function! screen.delete_item()
-        echo self.get_focused_element()._type
         if !has_key(self.get_focused_element(), 'is_todo')
             return
         endif
