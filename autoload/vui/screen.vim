@@ -208,11 +208,13 @@ function! vui#screen#new()
         endif
 
         if self._buffer < 0 || !bufexists(self._buffer)
+            call self.emit('before_create_buffer', self)
             enew
             let self._buffer = bufnr('%')
             call self._apply_buffer_options()
 
             let b:screen = self
+            call self.emit('after_create_buffer', self)
             "temporary
             "execute "silent IndentLinesDisable"
             "autocmd  TO-DO listen for resize of window
