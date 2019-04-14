@@ -53,7 +53,7 @@ You create your applications by combining components. For example, to create a b
     let my_panel = vui#component#panel#new("Title", 10, 10)
     let my_text = vui#component#text#new('Text')
 
-    call my_box.add_child(my_text)
+    call my_panel.add_child(my_text)
 
 This will display something like this:
 
@@ -156,9 +156,9 @@ Here are the default mappings:
 - `<CR> | <Space>` perform action on focused component
 - `r` refresh screen
 
-Besides that, commands that enters insert and visual mode are disabled (`noremap <key> <nop>`).
+Besides that, commands that enter insert and visual mode are disabled (`noremap <key> <nop>`).
 
-You can create custom mappings to your screen:
+You can add your custom mappings to your screen:
 
     " you can only map functions that belongs to your screen
     function! my_app.do_something()
@@ -167,7 +167,7 @@ You can create custom mappings to your screen:
 
     call my_app.map('a', 'do_something')
 
-In this case, when you press `a`, a new buffer will be edited.
+In this case, when you press `a`, a new buffer will be created.
 
 
 ## Example Application
