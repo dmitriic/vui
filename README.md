@@ -156,7 +156,7 @@ Here are the default mappings:
 - `<CR> | <Space>` perform action on focused component
 - `r` refresh screen
 
-Besides that commands that enters insert and visual mode are disabled (`noremap <key> <nop>`)
+Besides that, commands that enters insert and visual mode are disabled (`noremap <key> <nop>`).
 
 You can create custom mappings to your screen:
 
@@ -172,18 +172,19 @@ In this case, when you press `a`, a new buffer will be edited.
 
 ## Example Application
 
-Please check out the [to-do example](https://github.com/waldson/vui/blob/master/examp%C4%BAes/todo.vim) on examples folder.
+Please check out the [to-do example](https://github.com/waldson/vui/blob/master/examples/todo.vim) on examples folder.
 
-### To-do custom mappings
+### To-do mappings
 
-    - `a` add a new item
-    - `o` add a new item
-    - `m` toggle visibility of items (all or only pending)
-    - `dd` delete an item
+- `a` add a new item
+- `o` add a new item
+- `m` toggle visibility of items (all or only pending)
+- `dd` delete an item
+- `<CR>` toggle item
 
 ### How to run
 
-    - open `todo.vim` file (`e examples/todo.vim`)
-    - source the file (`source %`)
-    - press `<leader>td`
+- open `todo.vim` file (`e examples/todo.vim`)
+- source the file (`source %`)
+- press `<leader>td`
 
