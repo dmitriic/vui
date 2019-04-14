@@ -1,10 +1,10 @@
-function! vui#component#button#new(width, text)
+function! vui#component#button#new(text)
     let obj              = vui#component#base#new()
     let obj._type        = "button"
     let obj._placeholder = ""
     let obj._text        = a:text
 
-    call obj.set_width(a:width)
+    call obj.set_width(len(a:text))
     call obj.set_height(1)
     call obj.set_focusable(1)
 
