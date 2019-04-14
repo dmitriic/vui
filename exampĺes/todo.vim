@@ -20,6 +20,21 @@ function! VuiToDo()
         return todo
     endfunction
 
+    function! screen.delete_item()
+        echo self.get_focused_element()._type
+        if !has_key(self.get_focused_element(), 'is_todo')
+            return
+        endif
+
+        let l:index = index(g:vui_todos, self.get_focused_element().item)
+
+        if l:index == -1
+            return
+        endif
+
+        call remove(g:vui_todos, l:index)
+    endfunction
+
     function! screen.visible_todos()
         let visible = []
 
@@ -35,7 +50,7 @@ function! VuiToDo()
     endfunction
 
     function! screen.toggle_mode()
-        let self.mode = self.mode == 'all' ? 'pending' : 'all'
+        let self.mode        = self.mode == 'all' ? 'pending' : 'all'
         let g:vui_todos_mode = self.mode
     endfunction
 
@@ -43,9 +58,10 @@ function! VuiToDo()
         call a:container.clear_children()
 
         for i in range(0, len(a:todos) - 1)
-            let todo        = a:todos[i]
-            let toggle      = vui#component#toggle#new(todo.description)
-            let toggle.item = todo
+            let todo           = a:todos[i]
+            let toggle         = vui#component#toggle#new(todo.description)
+            let toggle.is_todo = 1
+            let toggle.item    = todo
 
             call toggle.set_checked(toggle.item.done)
 
@@ -66,7 +82,7 @@ function! VuiToDo()
         let main_panel = vui#component#panel#new('TO-DO' . subtitle, width, height)
         let content    = main_panel.get_content_component()
         let container  = vui#component#vcontainer#new()
-        let add_button = vui#component#button#new(10, '[Add Item]')
+        let add_button = vui#component#button#new('[Add Item]')
 
         let todos = self.visible_todos()
         call add_button.set_y(len(todos) == 0 ? 0 : len(todos) + 1)
@@ -89,6 +105,7 @@ function! VuiToDo()
 
     call screen.map('a', 'new_todo')
     call screen.map('m', 'toggle_mode')
+    call screen.map('dd', 'delete_item')
     call screen.show()
 endfunction
 
