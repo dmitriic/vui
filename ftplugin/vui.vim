@@ -19,6 +19,7 @@ nnoremap <buffer> h <nop>
 nnoremap <buffer> m <nop>
 
 nnoremap <silent><buffer> q :silent bd<CR>
+nnoremap <silent><buffer> <esc> :silent bd<CR>
 
 
 "TODO: Use <Plug> functions instead
