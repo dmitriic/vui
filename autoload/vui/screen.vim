@@ -113,6 +113,7 @@ function! vui#screen#new()
         let l:current_cursor_pos = getcurpos()
 
         call self._render_buffer.set_root_component(self._root_component)
+        call self._root_component.initialize(self)
         call self._root_component.update(self)
         call self._render_buffer.render()
 
@@ -143,6 +144,8 @@ function! vui#screen#new()
 
         call self.update_focusables()
         call self._apply_buffer_options()
+        redraw!
+        redrawstatus!
     endfunction
 
     function! obj.show()

@@ -10,6 +10,24 @@ function! vui#component#base#new()
     let obj._focusable    = 0
     let obj._is_component = 1
     let obj._type         = "base_component"
+    let obj._initialized  = 0
+
+    function! obj.initialize(screen)
+        " if self.is_initialized()
+        "     return
+        " endif
+
+        call self.initialize_children(a:screen)
+        call self.set_initialized(1)
+    endfunction
+
+    function! obj.set_initialized(initialized)
+        let self._initialized = a:initialized
+    endfunction
+
+    function! obj.is_initialized()
+        return self._initialized
+    endfunction
 
     function! obj.render(render_buffer)
         call self.render_children(a:render_buffer)
@@ -18,6 +36,19 @@ function! vui#component#base#new()
     function! obj.update(screen)
         call self.update_children(a:screen)
     endfunction
+
+    function! obj.initialize_children(screen)
+        if !self.has_children()
+            return
+        endif
+
+        for l:i in range(0, self._num_children - 1)
+            if !self._children[l:i].is_initialized()
+                call self._children[l:i].initialize(a:screen)
+            endif
+        endfor
+    endfunction
+
 
     function! obj.render_children(render_buffer)
         if !self.has_children()
