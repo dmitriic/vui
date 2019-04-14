@@ -77,8 +77,8 @@ nnoremap <silent><buffer> j :call <SID>focus_next()<CR>
 nnoremap <silent><buffer> <S-Tab> :call <SID>focus_prev()<CR>
 nnoremap <silent><buffer> k :call <SID>focus_prev()<CR>
 
-nnoremap <silent><buffer> J :call <SID>focus_first()<CR>
-nnoremap <silent><buffer> K :call <SID>focus_last()<CR>
+nnoremap <silent><buffer> K :call <SID>focus_first()<CR>
+nnoremap <silent><buffer> J :call <SID>focus_last()<CR>
 
 nnoremap <silent><buffer> <CR> :call <SID>perform_action()<CR>
 nnoremap <silent><buffer> <Space> :call <SID>perform_action()<CR>
