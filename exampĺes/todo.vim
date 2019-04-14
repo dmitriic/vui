@@ -61,7 +61,9 @@ function! VuiToDo()
         let width  = winwidth(0)
         let height = winheight(0)
 
-        let main_panel = vui#component#panel#new('TO-DO', width, height)
+        let subtitle   =  g:vui_todos_mode == 'all' ? ' - ALL' : ' - PENDING'
+
+        let main_panel = vui#component#panel#new('TO-DO' . subtitle, width, height)
         let content    = main_panel.get_content_component()
         let container  = vui#component#vcontainer#new()
         let add_button = vui#component#button#new(10, '[Add Item]')
@@ -79,6 +81,10 @@ function! VuiToDo()
         call a:screen.render_todos(container, todos)
 
         call a:screen.set_root_component(main_panel)
+    endfunction
+
+    function! screen.on_before_create_buffer(foo)
+        execute "40wincmd v"
     endfunction
 
     call screen.map('a', 'new_todo')
