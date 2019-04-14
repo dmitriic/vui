@@ -3,7 +3,6 @@ function! vui#component#input#new(width)
     let obj._type        = "input"
     let obj._placeholder = ""
     let obj._value       = ""
-    let obj._screen      = ""
 
     call obj.set_width(a:width)
     call obj.set_height(1)

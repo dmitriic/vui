@@ -3,7 +3,6 @@ function! vui#component#button#new(width, text)
     let obj._type        = "button"
     let obj._placeholder = ""
     let obj._text        = a:text
-    let obj._screen      = ""
 
     call obj.set_width(a:width)
     call obj.set_height(1)

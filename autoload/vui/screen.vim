@@ -8,16 +8,18 @@
 
 function! vui#screen#new()
     " extends node
-    let obj                 = vui#node#new()
-    let obj._buffer         = -1
-    let obj._render_buffer  = vui#render_buffer#new(obj)
-    let obj._root_component = {}
-    let obj._type           = "screen"
-    let obj._width          = 0
-    let obj._height         = 0
-    let obj._is_rendering   = 0
-    let obj._focusables     = []
-    let obj._focus_index    = -1
+    let obj                  = vui#node#new()
+    let obj._buffer          = -1
+    let obj._render_buffer   = vui#render_buffer#new(obj)
+    let obj._root_component  = {}
+    let obj._type            = "screen"
+    let obj._width           = 0
+    let obj._height          = 0
+    let obj._is_rendering    = 0
+    let obj._focusables      = []
+    let obj._focus_index     = -1
+    let obj._focused_element = {}
+    let obj._mappings        = {}
 
     function! obj.set_root_component(component)
         let self._root_component = a:component
@@ -98,6 +100,9 @@ function! vui#screen#new()
             return
         endif
 
+        call self.emit('before_render', self)
+        call self._update_mappings()
+
         if !self.has_root_component() || !self.get_root_component().is_visible()
             call self.clear()
             let self._is_rendering = 0
@@ -109,6 +114,7 @@ function! vui#screen#new()
         endif
 
         let self._is_rendering = 1
+        call self.update_focusables()
 
         let l:current_cursor_pos = getcurpos()
 
@@ -142,8 +148,16 @@ function! vui#screen#new()
         call setpos('.', l:current_cursor_pos)
         let self._is_rendering = 0
 
-        call self.update_focusables()
+        if !self.refocus_element()
+            if len(self._focusables) > self._focus_index
+                call self.focus_element(self._focusables[self._focus_index])
+            else
+                call self.focus_previous_element()
+            endif
+        endif
+
         call self._apply_buffer_options()
+
         redraw!
         redrawstatus!
     endfunction
@@ -153,6 +167,7 @@ function! vui#screen#new()
         call self.update_size()
         call self.render()
         call self.focus_next_element()
+        call self.emit('show', self)
     endfunction
 
     function! obj.clear()
@@ -218,12 +233,7 @@ function! vui#screen#new()
             return
         endif
 
-        let self._focus_index = 0
-
-        let l:x = self._focusables[0].get_global_x()
-        let l:y = self._focusables[0].get_global_y()
-
-        call self.set_cursor_position(l:x, l:y)
+        call self.focus_element(self._focusables[0])
     endfunction
 
     function! obj.focus_last_element()
@@ -234,13 +244,29 @@ function! vui#screen#new()
             return
         endif
 
-        let l:new_index = l:size - 1
-        let self._focus_index = l:new_index
+        call self.focus_element(self._focusables[l:size - 1])
+    endfunction
 
-        let l:x = self._focusables[l:new_index].get_global_x()
-        let l:y = self._focusables[l:new_index].get_global_y()
+    function! obj.focus_element(element)
+        let l:index = index(self._focusables, a:element)
+        if l:index == -1
+            return 0
+        endif
+
+        let self._focus_index = l:index
+
+        let l:x = self._focusables[l:index].get_global_x()
+        let l:y = self._focusables[l:index].get_global_y()
 
         call self.set_cursor_position(l:x, l:y)
+
+        let self._focused_element = self._focusables[l:index]
+
+        return 1
+    endfunction
+
+    function! obj.refocus_element()
+        call self.focus_element(self._focused_element)
     endfunction
 
     function! obj.focus_next_element()
@@ -253,15 +279,11 @@ function! vui#screen#new()
 
         let l:new_index = self._focus_index + 1
 
-        if l:new_index == l:size
+        if l:new_index < 0 || l:new_index >= len(self._focusables)
             let l:new_index = 0
         endif
-        let self._focus_index = l:new_index
 
-        let l:x = self._focusables[self._focus_index].get_global_x()
-        let l:y = self._focusables[self._focus_index].get_global_y()
-
-        call self.set_cursor_position(l:x, l:y)
+        call self.focus_element(self._focusables[l:new_index])
     endfunction
 
     function! obj.focus_previous_element()
@@ -274,16 +296,11 @@ function! vui#screen#new()
 
         let l:new_index = self._focus_index - 1
 
-        if l:new_index < 0
+        if l:new_index < 0 || l:new_index >= len(self._focusables)
             let l:new_index = len(self._focusables) - 1
         endif
 
-        let self._focus_index = l:new_index
-
-        let l:x = self._focusables[self._focus_index].get_global_x()
-        let l:y = self._focusables[self._focus_index].get_global_y()
-
-        call self.set_cursor_position(l:x, l:y)
+        call self.focus_element(self._focusables[l:new_index])
     endfunction
 
     function! obj.update_focusables()
@@ -314,6 +331,37 @@ function! vui#screen#new()
 
     function! obj.get_height()
         return self._height
+    endfunction
+
+    function! obj.clear_mappings()
+        let l:mappings = items(self._mappings)
+        for l:i in range(0, len(l:mappings) - 1)
+            call self.unmap(l:mappings[l:i][0])
+        endfor
+        let self._mappings = {}
+    endfunction
+
+    function! obj.map(lhs, rhs)
+        let self._mappings[a:lhs] = a:rhs
+    endfunction
+
+    function! obj._update_mappings()
+        let l:mappings = items(self._mappings)
+
+        for l:i in range(0, len(l:mappings) - 1)
+            let l:command  = "noremap <silent><buffer> " . l:mappings[l:i][0] . " :silent! call b:screen." . l:mappings[l:i][1] . '()'
+            let l:command .= '<bar>:silent! call b:screen.render()<CR>'
+            execute l:command
+        endfor
+    endfunction
+
+    function! obj.unmap(lhs)
+        if !has_key(self._mappings, a:lsh)
+            return
+        endif
+
+        execute "unmap " . a:lhs
+        unlet self._mappings[a:lsh]
     endfunction
 
     function! obj.perform_action()
