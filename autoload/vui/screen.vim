@@ -170,6 +170,10 @@ function! vui#screen#new()
         call self.emit('show', self)
     endfunction
 
+    function! obj.get_focused_element()
+        return self._focused_element
+    endfunction
+
     function! obj.clear()
         if !self.is_focused()
             return
