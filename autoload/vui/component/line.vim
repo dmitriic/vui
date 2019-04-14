@@ -16,7 +16,7 @@ function! vui#component#line#new(direction, x, y, size)
 
     function! obj.render(render_buffer)
         let l:start  = self.is_horizontal() ? self.get_global_x() : self.get_global_y()
-        let l:end    = l:start + (self.is_horizontal() ? self.get_width() : self.get_height())
+        let l:end    = l:start + (self.is_horizontal() ? self.get_width() : self.get_height()) - 1
 
         if (self.is_horizontal())
             for l:x in range(l:start, l:end)

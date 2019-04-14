@@ -25,8 +25,8 @@ function! vui#component#text#new(content)
     " endfunction
 
     function! obj.clear()
-        self._lines = []
-        self._width = 0;
+        let self._lines = []
+        let self._width = 0
     endfunction
 
     function! obj.get_height()
@@ -40,6 +40,11 @@ function! vui#component#text#new(content)
             let self._width = l:width
         endif
         call self.emit('changed', self)
+    endfunction
+
+    function! obj.set_text(content)
+        call self.clear()
+        call self.add_line(a:content)
     endfunction
 
     function! obj.remove_line(index)

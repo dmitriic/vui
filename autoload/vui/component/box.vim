@@ -23,9 +23,9 @@ function! vui#component#box#new(x, y, width, height)
 
     function! obj.render(render_buffer)
         let l:x_start = self.get_global_x()
-        let l:x_end   = l:x_start + self.get_width()
+        let l:x_end   = l:x_start + self.get_width() - 1
         let l:y_start = self.get_global_y()
-        let l:y_end   = l:y_start + self.get_height()
+        let l:y_end   = l:y_start + self.get_height() - 1
 
         ""corners
         let l:top    = g:vui_box_top_left_char

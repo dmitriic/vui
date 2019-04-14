@@ -38,6 +38,15 @@ function! vui#node#new()
     endfunction
 
     function! obj.emit(event, payload)
+        if has_key(self, 'on_' . a:event)
+            "FuncRef must start with an upper letter
+            let Callback = function(self['on_' . a:event], self)
+            let l:result = Callback(a:payload)
+            if l:result ==# 1
+                return
+            endif
+        endif
+
         if !has_key(self._events, a:event)
             if self.has_parent()
                 call self._parent.emit(a:event, a:payload)
@@ -48,7 +57,9 @@ function! vui#node#new()
         let l:i         = 0
         let l:propagate = 1
 
+
         while l:i < len(self._events[a:event])
+            "FuncRef must start with an upper letter
             let Callback = function(self._events[a:event][i], self)
             let l:result = Callback(a:payload)
 
@@ -61,7 +72,7 @@ function! vui#node#new()
         endwhile
 
         if l:propagate && self.has_parent()
-            self._parent.emit(a:event, a:payload)
+            call self._parent.emit(a:event, a:payload)
         endif
     endfunction
 

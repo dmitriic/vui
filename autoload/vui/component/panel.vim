@@ -60,8 +60,6 @@ function! vui#component#panel#new(title, width, height)
         call self._title_component.set_x(l:text_pos)
         call self._title_component.set_y(1)
         call self._divider.set_y(2)
-
-
         call self._content_component.set_y(3)
         call self._content_component.set_x(1)
 

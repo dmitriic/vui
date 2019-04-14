@@ -78,7 +78,7 @@ function! vui#component#base#new()
     endfunction
 
     function! obj.get_bounding_box()
-        let l:bbox = vui#bounding_box#new(self.get_x(), self.get_y(), self.get_width(), self.get_height())
+        let l:bbox = vui#bounding_box#new(self.get_global_x(), self.get_global_y(), self.get_width(), self.get_height())
         return l:bbox
     endfunction
 
@@ -106,7 +106,7 @@ function! vui#component#base#new()
         return self._visible
     endfunction
 
-    function! obj.get_focusable()
+    function! obj.is_focusable()
         return self._focusable
     endfunction
 

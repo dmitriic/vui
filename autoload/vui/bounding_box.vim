@@ -45,14 +45,14 @@ function! vui#bounding_box#new(x, y, width, height)
         endif
 
         let l:self_x_start = self.get_x()
-        let l:self_x_end   = self.get_x() + self.get_width()
+        let l:self_x_end   = self.get_x() + self.get_width() - 1
         let l:self_y_start = self.get_y()
-        let l:self_y_end   = self.get_y() + self.get_height()
+        let l:self_y_end   = self.get_y() + self.get_height() - 1
 
         let l:other_x_start = a:other.get_x()
-        let l:other_x_end   = a:other.get_x() + a:other.get_width()
+        let l:other_x_end   = a:other.get_x() + a:other.get_width() - 1
         let l:other_y_start = a:other.get_y()
-        let l:other_y_end   = a:other.get_y() + a:other.get_height()
+        let l:other_y_end   = a:other.get_y() + a:other.get_height() - 1
 
         if l:self_x_end < l:other_x_start || l:other_x_end < l:self_x_start
             return 0
