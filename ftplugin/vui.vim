@@ -21,7 +21,7 @@ nnoremap <buffer> m <nop>
 nnoremap <silent><buffer> q :silent bd<CR>
 
 
-"TODO: <Plug> functions on plugins folder
+"TODO: Use <Plug> functions instead
 function! s:focus_next()
     if !exists('b:screen')
         return
@@ -29,7 +29,7 @@ function! s:focus_next()
 
     call b:screen.focus_next_element()
 endfunction
-"
+
 function! s:focus_first()
     if !exists('b:screen')
         return
@@ -83,3 +83,9 @@ nnoremap <silent><buffer> <CR> :call <SID>perform_action()<CR>
 nnoremap <silent><buffer> <Space> :call <SID>perform_action()<CR>
 
 nnoremap <silent><buffer> r :call <SID>render()<CR>
+
+augroup vui_events
+    autocmd! * <buffer>
+    autocmd BufEnter <buffer> call <SID>render()
+    autocmd BufLeave <buffer> call <SID>render()
+augroup END
