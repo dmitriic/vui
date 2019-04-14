@@ -1,4 +1,4 @@
-function! VuiToDo()
+function! s:vui_todo_app()
     if !exists("g:vui_todos")
         let g:vui_todos      = []
         let g:vui_todos_mode = 'all'
@@ -108,6 +108,6 @@ function! VuiToDo()
     call screen.show()
 endfunction
 
-command! VuiToDo call VuiToDo()
+command! VuiToDo call s:vui_todo_app()
 
 nnoremap <leader>td :VuiToDo<CR>
