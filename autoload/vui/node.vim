@@ -115,6 +115,11 @@ function! vui#node#new()
         return self._num_children
     endfunction
 
+    function! obj.clear_children()
+        let self._children     = []
+        let self._num_children = 0
+    endfunction
+
     function! obj.remove_child(node)
         if !has_key(a:node, "_is_node") || !a:node._is_node
             return
